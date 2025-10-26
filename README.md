@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Backlog to Zenn Converter
 
-## Getting Started
+Backlogの課題とコメントから、Zenn記事を自動生成するツールです。
 
-First, run the development server:
+## 機能
+
+- ✅ Backlog APIから課題とコメントを取得
+- ✅ Zenn形式のMarkdown記事を自動生成
+- ✅ 週次レポートの自動生成
+- ✅ シンプルなダッシュボードUI
+
+## セットアップ
+
+### 1. Backlogアカウント作成
+
+#### フリープランのアカウント作成手順
+
+1. [Backlog公式サイト](https://backlog.com/ja/)にアクセス
+2. 「無料ではじめる」をクリック
+3. メールアドレスを入力して登録
+4. スペースID（スペースキー）を設定
+   - 例: `your-space` → `https://your-space.backlog.com`
+5. プロジェクトを作成
+   - 名前: 「学習記録」など
+   - キー: `STUDY` など
+
+#### APIキーの取得
+
+1. Backlogにログイン後、右上のアイコンをクリック
+2. 「個人設定」を選択
+3. 左メニューから「API」を選択
+4. 「登録」ボタンをクリックしてAPIキーを生成
+5. 生成されたAPIキーをコピー（**重要**: 後で確認できないので保存してください）
+
+#### プロジェクトIDの確認
+
+1. Backlogのプロジェクト画面を開く
+2. URLを確認: `https://your-space.backlog.com/projects/12345`
+3. 最後の数字（例: `12345`）がプロジェクトIDです
+
+### 2. このアプリのセットアップ
+
+#### 環境変数の設定
+
+`.env.local.example` をコピーして `.env.local` を作成し、編集:
+
+```env
+BACKLOG_SPACE_KEY=your-space        # あなたのスペースキー
+BACKLOG_API_KEY=your-api-key-here  # 取得したAPIキー
+BACKLOG_PROJECT_ID=12345           # プロジェクトID
+```
+
+#### 依存関係のインストール
+
+```bash
+npm install
+```
+
+#### 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000 にアクセスしてダッシュボードを開く。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 使い方
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 日常の運用フロー
 
-## Learn More
+1. **毎日**: Backlogで学習内容を課題として登録
+2. **週2回**: このアプリでZenn記事を生成・投稿
 
-To learn more about Next.js, take a look at the following resources:
+## 技術スタック
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **API**: Backlog REST API v2
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
