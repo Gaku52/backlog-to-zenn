@@ -40,8 +40,8 @@ export class NotionClient {
     sorts?: Array<{ property: string; direction: 'ascending' | 'descending' }>
     filter?: any
   }): Promise<NotionPage[]> {
-    const response = await this.client.databases.query({
-      database_id: databaseId,
+    const response = await this.client.dataSources.query({
+      data_source_id: databaseId,
       page_size: options?.pageSize || 100,
       sorts: options?.sorts,
       filter: options?.filter,
@@ -94,7 +94,7 @@ export class NotionClient {
    * データベース情報を取得
    */
   async getDatabase(databaseId: string) {
-    return await this.client.databases.retrieve({ database_id: databaseId })
+    return await this.client.dataSources.retrieve({ data_source_id: databaseId })
   }
 
   /**
