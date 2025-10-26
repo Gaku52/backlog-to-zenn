@@ -1,5 +1,5 @@
-import { NotionClient } from '../lib/notion-client.js'
-import { generateZennArticle } from '../lib/zenn-generator.js'
+import { NotionClient } from '@/lib/notion-client'
+import { generateZennArticle } from '@/lib/zenn-generator'
 import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
@@ -26,7 +26,7 @@ async function main() {
     // データベース情報を取得
     console.log('📊 データベース情報を取得中...')
     const database = await client.getDatabase(databaseId)
-    console.log(`   データベース名: ${database.title[0]?.plain_text || '未設定'}\n`)
+    console.log(`   データベース名: ${(database as any).title?.[0]?.plain_text || '未設定'}\n`)
 
     // ページ一覧を取得（最新5件）
     console.log('📄 学習記録ページを取得中...')

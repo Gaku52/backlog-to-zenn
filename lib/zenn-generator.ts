@@ -17,11 +17,12 @@ export function generateZennArticle(
   blocks: NotionBlock[],
   options?: ZennArticleOptions
 ): string {
+  // Notionのプロパティから取得したメタデータを優先し、optionsはフォールバック
   const title = options?.title || page.title
-  const emoji = options?.emoji || '📝'
-  const type = options?.type || 'tech'
-  const topics = options?.topics || ['notion', '学習記録']
-  const published = options?.published ?? false
+  const emoji = options?.emoji || page.zennMetadata?.emoji || '📝'
+  const type = options?.type || page.zennMetadata?.type || 'tech'
+  const topics = options?.topics || page.zennMetadata?.topics || ['notion', '学習記録']
+  const published = options?.published ?? page.zennMetadata?.published ?? false
 
   // Frontmatter
   const frontmatter = [
@@ -67,6 +68,7 @@ export function generateWeeklyReport(
   const weekEnd = new Date(weekStart)
   weekEnd.setDate(weekEnd.getDate() + 6)
 
+  // 週次レポートは基本的にoptionsで指定、なければデフォルト値
   const title = options?.title || `学習記録 ${formatDate(weekStart)} - ${formatDate(weekEnd)}`
   const emoji = options?.emoji || '📚'
   const type = options?.type || 'tech'
@@ -149,7 +151,8 @@ function convertBlocksToMarkdown(blocks: NotionBlock[]): string {
         lines.push(`- ${block.content}`)
         break
       case 'code':
-        lines.push('```')
+        const language = block.language || ''
+        lines.push(`\`\`\`${language}`)
         lines.push(block.content)
         lines.push('```')
         break

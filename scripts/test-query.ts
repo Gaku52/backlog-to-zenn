@@ -35,7 +35,7 @@ async function test() {
     // @ts-ignore - trying undocumented API
     const result = await notion.request({
       path: `databases/${databaseId}/query`,
-      method: 'POST',
+      method: 'post',
       body: {
         page_size: 5
       }

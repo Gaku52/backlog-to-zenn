@@ -13,13 +13,13 @@ async function test() {
   const notion = new Client({ auth: apiKey })
 
   console.log('\nNotion client created:', notion)
-  console.log('databases:', notion.databases)
-  console.log('databases.query:', typeof notion.databases.query)
+  console.log('dataSources:', notion.dataSources)
+  console.log('dataSources.query:', typeof notion.dataSources.query)
 
   try {
-    const database = await notion.databases.retrieve({ database_id: databaseId! })
+    const database = await notion.dataSources.retrieve({ data_source_id: databaseId! })
     console.log('\nDatabase retrieved successfully!')
-    console.log('Title:', database.title[0]?.plain_text)
+    console.log('Title:', (database as any).title?.[0]?.plain_text)
   } catch (error) {
     console.error('Error:', error)
   }
