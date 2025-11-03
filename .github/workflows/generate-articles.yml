@@ -1,6 +1,11 @@
 name: Generate Zenn Articles from Notion
 
 on:
+  # mainブランチへのpush時に実行
+  push:
+    branches:
+      - main
+
   # 毎週日曜日の22時（JST）に実行
   schedule:
     - cron: '0 13 * * 0'  # UTC 13:00 = JST 22:00（日本時間）
