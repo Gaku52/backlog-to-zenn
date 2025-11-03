@@ -69,14 +69,16 @@ async function main() {
         published: false,
       })
 
-      // ファイル名を生成（タイトルをサニタイズ）
-      const sanitizedTitle = page.title
-        .replace(/[/\\?%*:|"<>]/g, '-')
-        .substring(0, 50)
-      const timestamp = new Date(page.createdTime)
-        .toISOString()
-        .split('T')[0]
-      const filename = `${timestamp}_${sanitizedTitle}.md`
+      // ファイル名を生成（Zenn形式：英数字とハイフンのみ、12〜50文字）
+      const slug = page.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-') // 英数字以外をハイフンに
+        .replace(/^-+|-+$/g, '') // 前後のハイフンを削除
+        .substring(0, 50) // 最大50文字
+
+      // スラッグが短すぎる場合はタイムスタンプを追加
+      const timestamp = Date.now().toString(36)
+      const filename = slug.length >= 12 ? `${slug}.md` : `${slug}-${timestamp}.md`
       const filepath = path.join(outputDir, filename)
 
       // ファイルに保存
