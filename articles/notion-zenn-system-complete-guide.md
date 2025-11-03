@@ -10,6 +10,16 @@ published: false
 
 学習記録をNotionで管理し、それを自動的にZenn記事として投稿できる仕組みを構築しました。本記事では、Notion API、Claude Code、Zenn CLI、GitHub Actionsを組み合わせた自動化システムの構築手順を詳しく解説します。
 
+:::message alert
+**セキュリティに関する重要な注意**
+本記事に記載されているAPIキーやデータベースIDはすべてプレースホルダーです。実際の値は絶対に公開リポジトリやブログ記事に含めないでください。以下の点に注意してください：
+
+- APIキーは `.env.local` に保存し、`.gitignore` に追加
+- GitHub Secretsを使用して環境変数を安全に管理
+- 公開する記事やドキュメントには必ずプレースホルダーを使用
+- 万が一漏洩した場合は、即座にIntegrationを再作成してキーを更新
+:::
+
 ## システム概要
 
 ### アーキテクチャ
@@ -49,14 +59,15 @@ Zenn（自動デプロイ）
 
 3. **Internal Integration Tokenを取得**
    - `ntn_` で始まるAPIキーが発行される
-   - このキーは後で使用するため、安全に保管
+   - **⚠️ このキーは絶対に公開しないでください**
+   - 安全な場所（`.env.local`やGitHub Secrets）に保管
 
 ### 1-2. Capabilitiesの設定
 
-Integrationsページで以下の権限を有効化：
+Integrationsページで以下の権限を有効化（最低限「Read content」が必須）：
 
 ```
-✅ コンテンツを読み取る (Read content)
+✅ コンテンツを読み取る (Read content) - 必須
 ✅ コンテンツを更新 (Update content)
 ✅ コンテンツを挿入 (Insert content)
 ✅ コメントの読み取り (Read comments)
@@ -67,19 +78,21 @@ Integrationsページで以下の権限を有効化：
 
 1. Notionで学習記録データベースを開く
 2. 右上の「**...**」メニューをクリック
-3. 「**接続を追加**」をクリック
+3. 「**接続を追加**」または「**Add connections**」をクリック
 4. 作成したインテグレーションを選択
-5. 「許可」をクリック
+5. 「許可」または「**Confirm**」をクリック
 
-**重要**: この手順を忘れると `object_not_found` エラーが発生します。
+**⚠️ 最重要**: この手順を忘れると `object_not_found` エラーが発生します。接続が成功すると、データベースページの「アクティブな接続」にIntegrationが表示されます。
+
+**セキュリティ**: Integrationは接続したデータベースのみにアクセスできます。ワークスペース全体へのアクセスではありません。
 
 ### 1-4. データベースIDの取得
 
 データベースのURLから32文字のIDを取得：
 
 ```
-https://www.notion.so/298a438d9c2d8061bda1d538e8a81ed6?v=...
-                    ↑ この部分がデータベースID
+https://www.notion.so/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?v=...
+                    ↑ この部分がデータベースID（32文字）
 ```
 
 ---
