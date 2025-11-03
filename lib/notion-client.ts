@@ -32,8 +32,10 @@ export interface NotionBlock {
 
 export class NotionClient {
   private client: Client
+  private apiKey: string
 
   constructor(apiKey: string) {
+    this.apiKey = apiKey
     this.client = new Client({
       auth: apiKey,
     })
@@ -49,14 +51,28 @@ export class NotionClient {
     filter?: any
   }): Promise<NotionPage[]> {
     try {
-      const response = await this.client.dataSources.query({
-        data_source_id: databaseId,
-        page_size: options?.pageSize || 100,
-        sorts: options?.sorts,
-        filter: options?.filter,
+      // 直接APIリクエストを送信
+      const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          page_size: options?.pageSize || 100,
+          sorts: options?.sorts,
+          filter: options?.filter,
+        }),
       })
 
-      return response.results.map((page) => this.formatPage(page as PageObjectResponse))
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to query database')
+      }
+
+      const data = await response.json()
+      return data.results.map((page: any) => this.formatPage(page as PageObjectResponse))
     } catch (error) {
       throw new Error(`Failed to fetch pages from database ${databaseId}: ${error instanceof Error ? error.message : String(error)}`)
     }
@@ -115,7 +131,20 @@ export class NotionClient {
    */
   async getDatabase(databaseId: string) {
     try {
-      return await this.client.dataSources.retrieve({ data_source_id: databaseId })
+      const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Notion-Version': '2022-06-28',
+        },
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to retrieve database')
+      }
+
+      return await response.json()
     } catch (error) {
       throw new Error(`Failed to retrieve database ${databaseId}: ${error instanceof Error ? error.message : String(error)}`)
     }

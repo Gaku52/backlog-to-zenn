@@ -25,8 +25,12 @@ async function main() {
 
     // データベース情報を取得
     console.log('📊 データベース情報を取得中...')
-    const database = await client.getDatabase(databaseId)
-    console.log(`   データベース名: ${(database as any).title?.[0]?.plain_text || '未設定'}\n`)
+    try {
+      const database = await client.getDatabase(databaseId)
+      console.log(`   データベース名: ${(database as any).title?.[0]?.plain_text || '未設定'}\n`)
+    } catch (error) {
+      console.log('   データベース名の取得をスキップしました\n')
+    }
 
     // ページ一覧を取得（最新5件）
     console.log('📄 学習記録ページを取得中...')
