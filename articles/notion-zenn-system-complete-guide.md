@@ -1,4 +1,10 @@
-# Notion × Claude Code × Zenn で実現する自動記事投稿システムの構築
+---
+title: "Notion × Claude Code × Zenn で実現する自動記事投稿システムの構築"
+emoji: "🤖"
+type: "tech"
+topics: ["notion", "zenn", "githubactions", "typescript", "claudecode"]
+published: false
+---
 
 ## はじめに
 
